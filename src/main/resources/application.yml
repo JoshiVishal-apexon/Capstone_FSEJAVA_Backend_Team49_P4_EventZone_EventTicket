@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: eventzone-backend
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+
+jwt:
+  # Dev-only default secret. Override with the JWT_SECRET env var (or a
+  # proper secrets manager) in any real deployment. Must be long enough
+  # for HS256 (32+ bytes); JwtUtil pads shorter values automatically.
+  secret: ${JWT_SECRET:eventzone-dev-secret-key-please-change-in-production-0123456789}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+info:
+  app:
+    name: EventZone Backend
+    description: Event ticket booking APIs with health and metrics monitoring
+    version: 1.0.0
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      slo:
+        http.server.requests: 50ms,100ms,200ms,500ms,1s,2s
+
+logging:
+  level:
+    root: INFO
+    com.eventzone: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
