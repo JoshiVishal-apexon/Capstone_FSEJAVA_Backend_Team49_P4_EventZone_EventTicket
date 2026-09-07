@@ -1,0 +1,40 @@
+# Prod profile STUB - reflects the original brief's PostgreSQL target.
+# This profile is NOT exercised in local dev (see application-dev.yml,
+# which is the default/active profile and needs no external services).
+#
+# To actually use this profile you would need:
+#   1. A running PostgreSQL instance and an empty database, e.g.:
+#        createdb eventzone
+#   2. The PostgreSQL JDBC driver added as a dependency in pom.xml:
+#        <dependency>
+#          <groupId>org.postgresql</groupId>
+#          <artifactId>postgresql</artifactId>
+#          <scope>runtime</scope>
+#        </dependency>
+#   3. Environment variables for the datasource credentials (do not commit
+#      real credentials to this file):
+#        DB_URL=jdbc:postgresql://localhost:5432/eventzone
+#        DB_USERNAME=eventzone
+#        DB_PASSWORD=<secret>
+#   4. Run with: mvn spring-boot:run -Dspring-boot.run.profiles=prod
+#
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/eventzone}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:eventzone}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  h2:
+    console:
+      enabled: false
+
+logging:
+  level:
+    com.eventzone: INFO

@@ -1,0 +1,24 @@
+# Build artifacts
+/target/
+/build/
+/bin/
+*.class
+effective-pom
+
+# IDE files
+/.idea/
+.vscode/
+*.iml
+
+# Local app data
+/data/
+*.db
+*.mv.db
+*.trace.db
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
