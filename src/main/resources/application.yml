@@ -18,32 +18,6 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-info:
-  app:
-    name: EventZone Backend
-    description: Event ticket booking APIs with health and metrics monitoring
-    version: 1.0.0
-
-management:
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: when_authorized
-      probes:
-        enabled: true
-  metrics:
-    tags:
-      application: ${spring.application.name}
-    distribution:
-      percentiles-histogram:
-        http.server.requests: true
-      slo:
-        http.server.requests: 50ms,100ms,200ms,500ms,1s,2s
-
 logging:
   level:
     root: INFO

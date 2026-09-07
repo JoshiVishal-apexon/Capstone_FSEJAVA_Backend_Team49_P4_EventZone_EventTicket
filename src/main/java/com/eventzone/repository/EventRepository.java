@@ -8,5 +8,7 @@ import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
-    List<Event> findByCategory_Id(UUID categoryId);
+    List<Event> findByActiveTrue();
+
+    List<Event> findByActiveTrueAndCategory_NameIgnoreCase(String categoryName);
 }
