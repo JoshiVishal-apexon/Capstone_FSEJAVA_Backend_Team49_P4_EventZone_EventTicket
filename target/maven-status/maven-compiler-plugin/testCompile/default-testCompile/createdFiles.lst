@@ -1,0 +1,6 @@
+com\eventzone\service\EventServiceTest.class
+com\eventzone\service\TicketCategoryServiceTest.class
+com\eventzone\service\AuthServiceTest.class
+com\eventzone\service\BookingServiceTest.class
+com\eventzone\service\CategoryServiceTest.class
+com\eventzone\service\OrganiserServiceTest.class
