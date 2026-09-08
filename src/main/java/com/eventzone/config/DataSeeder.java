@@ -31,7 +31,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DataSeeder implements ApplicationRunner {
 
-    private static final String SEED_PASSWORD = "Password123!";
+    private static final String SEED_PASSWORD = "Password@123";
 
     private final UserRepository userRepository;
     private final EventCategoryRepository categoryRepository;
@@ -50,9 +50,9 @@ public class DataSeeder implements ApplicationRunner {
         log.info("EventZone: seeding initial data...");
 
         User admin = saveUser("admin@eventzone.com", "Admin", "ADMIN");
-        User org1 = saveUser("org1@eventzone.com", "Arjun Events", "ORGANISER");
-        User org2 = saveUser("org2@eventzone.com", "Priya Productions", "ORGANISER");
-        User attendee = saveUser("user1@eventzone.com", "Divya", "ATTENDEE");
+        User organiser1 = saveUser("organiser1@eventzone.com", "Skyline Events", "ORGANISER");
+        User organiser2 = saveUser("organiser2@eventzone.com", "Nova Productions", "ORGANISER");
+        User attendee = saveUser("attendee1@eventzone.com", "Aarav", "ATTENDEE");
 
         Map<String, EventCategory> categories = new HashMap<>();
         for (String name : new String[]{"Concert", "Sports", "Workshop", "Conference"}) {
@@ -63,53 +63,46 @@ public class DataSeeder implements ApplicationRunner {
         // genuinely upcoming (the EventCreateRequest DTO enforces @Future on
         // organiser-submitted dates via the API; seeded rows bypass that DTO
         // but should still look realistic in the UI).
-        createEvent(org1, categories.get("Concert"), "Sunburn Arena ft. DJ Nova",
-                "An electrifying night of EDM with DJ Nova and supporting acts.",
-                LocalDateTime.of(2026, 9, 14, 19, 0), "Jawaharlal Nehru Stadium, Delhi",
-                "https://picsum.photos/seed/sunburn/600/400",
+        createEvent(organiser1, categories.get("Concert"), "Neon Pulse Live",
+                "A high-energy live concert featuring electronic and pop acts.",
+                LocalDateTime.of(2026, 9, 14, 19, 0), "Bharat Mandapam, New Delhi",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkpbb5uqg3lUI_krb40UPhT0Hp8qnAl5Jf_ydGbEZweA&s=10",
                 new TicketCategoryDef("General", new BigDecimal("999.00"), 500),
                 new TicketCategoryDef("VIP", new BigDecimal("2999.00"), 100));
 
-        createEvent(org1, categories.get("Concert"), "Unplugged: Acoustic Nights",
-                "An intimate acoustic evening featuring indie artists from across the country.",
-                LocalDateTime.of(2026, 10, 5, 18, 30), "Phoenix Marketcity Amphitheatre, Bengaluru",
-                "https://picsum.photos/seed/unplugged/600/400",
+        createEvent(organiser1, categories.get("Concert"), "Midnight Sessions",
+                "An intimate acoustic evening featuring indie artists and storytellers.",
+                LocalDateTime.of(2026, 10, 5, 18, 30), "Phoenix Marketcity, Bengaluru",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTv7_GoxndSe4IKfyv9uWrLcdyYF5KaLB_tTfZFVNtTYQ&s=10",
                 new TicketCategoryDef("General", new BigDecimal("499.00"), 300),
                 new TicketCategoryDef("VIP", new BigDecimal("1499.00"), 60));
 
-        createEvent(org2, categories.get("Sports"), "City Marathon 2027",
-                "A 21K half marathon through the heart of the city, open to all skill levels.",
-                LocalDateTime.of(2027, 1, 25, 6, 0), "Marine Drive, Mumbai",
-                "https://picsum.photos/seed/marathon/600/400",
+        createEvent(organiser2, categories.get("Sports"), "Run for Glory 2026",
+                "A citywide 21K run open to all skill levels.",
+                LocalDateTime.of(2026, 1, 25, 6, 0), "Marine Drive Promenade, Mumbai",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOeB7YmhbtO0iNYLneWu__rNsv1IPIODNizG7MaaVTTA&s=10",
                 new TicketCategoryDef("General", new BigDecimal("299.00"), 2000),
                 new TicketCategoryDef("VIP", new BigDecimal("999.00"), 200));
 
-        createEvent(org2, categories.get("Sports"), "Premier Cricket League Final",
-                "The season finale of the Premier Cricket League. Witness the champions crowned.",
+        createEvent(organiser2, categories.get("Sports"), "Champions Cup Final",
+                "The season finale of the Champions Cup. Witness the winners crowned.",
                 LocalDateTime.of(2026, 11, 12, 15, 0), "Eden Gardens, Kolkata",
-                "https://picsum.photos/seed/cricket/600/400",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8EzZ-14reAIKdlKdCGUth0YuLr8R3yWzwK8ng0_ERqg&s=10",
                 new TicketCategoryDef("General", new BigDecimal("799.00"), 5000),
                 new TicketCategoryDef("VIP", new BigDecimal("4999.00"), 500));
 
-        createEvent(org1, categories.get("Workshop"), "Full-Stack Development Bootcamp",
-                "A hands-on weekend workshop covering Angular, Spring Boot, and REST API design.",
-                LocalDateTime.of(2026, 9, 28, 9, 0), "WeWork Galaxy, Bengaluru",
-                "https://picsum.photos/seed/bootcamp/600/400",
-                new TicketCategoryDef("General", new BigDecimal("1499.00"), 80),
-                new TicketCategoryDef("VIP", new BigDecimal("2999.00"), 20));
-
-        createEvent(org2, categories.get("Conference"), "TechForward Summit 2027",
-                "Industry leaders discuss the future of cloud, AI, and platform engineering.",
+        createEvent(organiser2, categories.get("Conference"), "FutureStack Summit 2027",
+                "Industry leaders discuss cloud, AI, and platform engineering trends.",
                 LocalDateTime.of(2027, 2, 20, 9, 30), "HITEX Exhibition Centre, Hyderabad",
-                "https://picsum.photos/seed/techforward/600/400",
+                "https://wext.in/wp-content/uploads/2026/02/AI-Impact-Summit-2026.png",
                 new TicketCategoryDef("General", new BigDecimal("1999.00"), 1000),
                 new TicketCategoryDef("VIP", new BigDecimal("5999.00"), 150));
 
         log.info("=================================================================");
         log.info("EventZone seed data created. Login credentials (password for all: {}):", SEED_PASSWORD);
         log.info("  ADMIN      -> {}", admin.getEmail());
-        log.info("  ORGANISER  -> {}", org1.getEmail());
-        log.info("  ORGANISER  -> {}", org2.getEmail());
+        log.info("  ORGANISER  -> {}", organiser1.getEmail());
+        log.info("  ORGANISER  -> {}", organiser2.getEmail());
         log.info("  ATTENDEE   -> {}", attendee.getEmail());
         log.info("=================================================================");
     }

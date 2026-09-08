@@ -104,13 +104,13 @@ echo ""
 echo "== 3. Walking the happy path =="
 
 echo "-- Auth --"
-LOGIN_ADMIN=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/auth/login" -H "Content-Type: application/json" -d '{"email":"admin@eventzone.com","password":"Password123!"}')
+LOGIN_ADMIN=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/auth/login" -H "Content-Type: application/json" -d '{"email":"admin@eventzone.com","password":"Password@123"}')
 ADMIN_CODE=$(echo "$LOGIN_ADMIN" | tail -1)
 ADMIN_BODY=$(echo "$LOGIN_ADMIN" | sed '$d')
 check "Login as admin" 200 "$ADMIN_CODE"
 ADMIN_TOKEN=$(json_field "$ADMIN_BODY" token)
 
-LOGIN_ORG=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/auth/login" -H "Content-Type: application/json" -d '{"email":"org1@eventzone.com","password":"Password123!"}')
+LOGIN_ORG=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/auth/login" -H "Content-Type: application/json" -d '{"email":"organiser1@eventzone.com","password":"Password@123"}')
 ORG_CODE=$(echo "$LOGIN_ORG" | tail -1)
 ORG_BODY=$(echo "$LOGIN_ORG" | sed '$d')
 check "Login as organiser" 200 "$ORG_CODE"
@@ -118,11 +118,11 @@ ORG_TOKEN=$(json_field "$ORG_BODY" token)
 
 RAND=$RANDOM$RANDOM
 REGISTER_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$BASE_URL/api/auth/register" -H "Content-Type: application/json" \
-  -d "{\"email\":\"smoketest${RAND}@eventzone.com\",\"password\":\"Password123!\",\"name\":\"Smoke Test\"}")
+  -d "{\"email\":\"smoketest${RAND}@eventzone.com\",\"password\":\"Password@123\",\"name\":\"Smoke Test\"}")
 check "Register new attendee" 201 "$REGISTER_CODE"
 
 LOGIN_ATTENDEE=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/api/auth/login" -H "Content-Type: application/json" \
-  -d "{\"email\":\"smoketest${RAND}@eventzone.com\",\"password\":\"Password123!\"}")
+  -d "{\"email\":\"smoketest${RAND}@eventzone.com\",\"password\":\"Password@123\"}")
 ATT_CODE=$(echo "$LOGIN_ATTENDEE" | tail -1)
 ATT_BODY=$(echo "$LOGIN_ATTENDEE" | sed '$d')
 check "Login as newly-registered attendee" 200 "$ATT_CODE"

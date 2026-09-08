@@ -39,7 +39,7 @@ class OrganiserServiceTest {
     @BeforeEach
     void setUp() {
         organiserService = new OrganiserService(eventRepository, bookingRepository);
-        organiser = User.builder().id(UUID.randomUUID()).email("org@eventzone.com").role("ORGANISER").name("Organizer").passwordHash("hash").build();
+        organiser = User.builder().id(UUID.randomUUID()).email("organiser1@eventzone.com").role("ORGANISER").name("Organizer").passwordHash("hash").build();
     }
 
     @Test
@@ -68,7 +68,7 @@ class OrganiserServiceTest {
 
         Booking first = Booking.builder()
                 .id(UUID.randomUUID())
-                .user(User.builder().id(UUID.randomUUID()).email("user1@eventzone.com").role("ATTENDEE").name("User1").passwordHash("hash").build())
+                .user(User.builder().id(UUID.randomUUID()).email("attendee1@eventzone.com").role("ATTENDEE").name("User1").passwordHash("hash").build())
                 .ticketCategory(vip)
                 .quantity(10)
                 .status("CONFIRMED")

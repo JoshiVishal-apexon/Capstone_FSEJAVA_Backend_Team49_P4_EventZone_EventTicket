@@ -81,7 +81,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@eventzone.com\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\n  \"email\": \"admin@eventzone.com\",\n  \"password\": \"Password@123\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
           }
@@ -102,7 +102,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"org1@eventzone.com\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\n  \"email\": \"organiser1@eventzone.com\",\n  \"password\": \"Password@123\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
           }
@@ -123,7 +123,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"user1@eventzone.com\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\n  \"email\": \"attendee1@eventzone.com\",\n  \"password\": \"Password@123\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api", "auth", "login"] }
           }
@@ -135,7 +135,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"New Attendee\",\n  \"email\": \"new.attendee@eventzone.com\",\n  \"password\": \"Password123!\"\n}"
+              "raw": "{\n  \"name\": \"New Attendee\",\n  \"email\": \"new.attendee@eventzone.com\",\n  \"password\": \"Password@123\"\n}"
             },
             "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] }
           }

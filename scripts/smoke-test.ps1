@@ -189,14 +189,14 @@ Assert-Status "1. Login as Admin" 200 $admin
     Write-Host "== 3. Walking the happy path ==" -ForegroundColor Cyan
 
     Write-Host "-- Auth --"
-    $r = Invoke-Api -Method POST -Url "$baseUrl/api/auth/login" -Body '{"email":"admin@eventzone.com","password":"Password123!"}'
+    $r = Invoke-Api -Method POST -Url "$baseUrl/api/auth/login" -Body '{"email":"admin@eventzone.com","password":"Password@123"}'
     Test-Check "Login as admin" 200 $r.StatusCode
     $adminToken = Get-Field $r.Content "token"
 
 # 2) Login as Organiser
 $organiser = Invoke-Api -Method POST -Path "/api/auth/login" -Body @{ email = "organiser1@eventzone.com"; password = "Password@123" }
 Assert-Status "2. Login as Organiser" 200 $organiser
-    $r = Invoke-Api -Method POST -Url "$baseUrl/api/auth/login" -Body '{"email":"org1@eventzone.com","password":"Password123!"}'
+    $r = Invoke-Api -Method POST -Url "$baseUrl/api/auth/login" -Body '{"email":"organiser1@eventzone.com","password":"Password@123"}'
     Test-Check "Login as organiser" 200 $r.StatusCode
     $orgToken = Get-Field $r.Content "token"
 
@@ -205,7 +205,7 @@ $attendee = Invoke-Api -Method POST -Path "/api/auth/login" -Body @{ email = "at
 Assert-Status "3. Login as Attendee" 200 $attendee
 $attendeeToken = if ($attendee.Content) { ($attendee.Content | ConvertFrom-Json).token } else { $null }
     $rand = Get-Random
-    $registerBody = "{`"email`":`"smoketest$rand@eventzone.com`",`"password`":`"Password123!`",`"name`":`"Smoke Test`"}"
+    $registerBody = "{`"email`":`"smoketest$rand@eventzone.com`",`"password`":`"Password@123`",`"name`":`"Smoke Test`"}"
     $r = Invoke-Api -Method POST -Url "$baseUrl/api/auth/register" -Body $registerBody
     Test-Check "Register new attendee" 201 $r.StatusCode
 
@@ -213,7 +213,7 @@ $attendeeToken = if ($attendee.Content) { ($attendee.Content | ConvertFrom-Json)
 $newEmail = "user$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds())@eventzone.com"
 $register = Invoke-Api -Method POST -Path "/api/auth/register" -Body @{ email = $newEmail; password = "Password@123"; name = "New Attendee" }
 Assert-Status "4. Register" 201 $register
-    $loginAttBody = "{`"email`":`"smoketest$rand@eventzone.com`",`"password`":`"Password123!`"}"
+    $loginAttBody = "{`"email`":`"smoketest$rand@eventzone.com`",`"password`":`"Password@123`"}"
     $r = Invoke-Api -Method POST -Url "$baseUrl/api/auth/login" -Body $loginAttBody
     Test-Check "Login as newly-registered attendee" 200 $r.StatusCode
     $attendeeToken = Get-Field $r.Content "token"

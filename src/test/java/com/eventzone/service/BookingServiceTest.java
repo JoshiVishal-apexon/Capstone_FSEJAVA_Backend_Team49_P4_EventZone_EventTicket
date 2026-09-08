@@ -52,18 +52,18 @@ class BookingServiceTest {
 
         attendee = User.builder()
                 .id(UUID.randomUUID())
-                .email("user1@eventzone.com")
+                .email("attendee1@eventzone.com")
                 .passwordHash("hashed")
                 .role("ATTENDEE")
-                .name("Divya")
+                .name("Aarav")
                 .build();
 
         User organiser = User.builder()
                 .id(UUID.randomUUID())
-                .email("org1@eventzone.com")
+                .email("organiser1@eventzone.com")
                 .passwordHash("hashed")
                 .role("ORGANISER")
-                .name("Arjun Events")
+                .name("Skyline Events")
                 .build();
 
         Event event = Event.builder()
