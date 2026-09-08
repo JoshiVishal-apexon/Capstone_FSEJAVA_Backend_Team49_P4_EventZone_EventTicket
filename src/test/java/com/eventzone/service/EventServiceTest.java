@@ -50,8 +50,8 @@ class EventServiceTest {
     void setUp() {
         eventService = new EventService(eventRepository, categoryRepository, bookingRepository);
 
-        organiser = User.builder().id(UUID.randomUUID()).email("org1@eventzone.com").role("ORGANISER").name("Arjun Events").passwordHash("h").build();
-        otherOrganiser = User.builder().id(UUID.randomUUID()).email("org2@eventzone.com").role("ORGANISER").name("Priya Productions").passwordHash("h").build();
+        organiser = User.builder().id(UUID.randomUUID()).email("organiser1@eventzone.com").role("ORGANISER").name("Skyline Events").passwordHash("h").build();
+        otherOrganiser = User.builder().id(UUID.randomUUID()).email("organiser2@eventzone.com").role("ORGANISER").name("Nova Productions").passwordHash("h").build();
         admin = User.builder().id(UUID.randomUUID()).email("admin@eventzone.com").role("ADMIN").name("Admin").passwordHash("h").build();
         category = EventCategory.builder().id(UUID.randomUUID()).name("Concert").build();
     }

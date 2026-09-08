@@ -28,8 +28,7 @@ public class Event {
     @Column(nullable = false)
     private String title;
 
-    @Lob
-    @Column(columnDefinition = "CLOB")
+    @Column(columnDefinition = "text")
     private String description;
 
     @Column(name = "event_date", nullable = false)

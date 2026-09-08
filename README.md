@@ -39,14 +39,14 @@ under the default `dev` profile, so no external services are needed.
 
 `DataSeeder` populates the database on first startup only (it skips seeding if the users table is
 non-empty), creating 4 categories, 6 active events with General/VIP ticket categories, and these
-accounts — all with the password `Password123!`:
+accounts — all with the password `Password@123`:
 
 | Role      | Email                  |
 |-----------|------------------------|
 | ADMIN     | admin@eventzone.com    |
-| ORGANISER | org1@eventzone.com     |
-| ORGANISER | org2@eventzone.com     |
-| ATTENDEE  | user1@eventzone.com    |
+| ORGANISER | organiser1@eventzone.com |
+| ORGANISER | organiser2@eventzone.com |
+| ATTENDEE  | attendee1@eventzone.com  |
 
 To reseed from scratch, delete the `data/` directory and restart.
 

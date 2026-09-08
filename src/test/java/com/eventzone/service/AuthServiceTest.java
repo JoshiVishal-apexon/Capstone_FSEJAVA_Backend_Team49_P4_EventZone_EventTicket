@@ -47,7 +47,7 @@ class AuthServiceTest {
     void register_duplicateEmail_throwsConflict() {
         when(userRepository.existsByEmail("existing@eventzone.com")).thenReturn(true);
 
-        RegisterRequest request = new RegisterRequest("existing@eventzone.com", "Password123!", "Existing User");
+        RegisterRequest request = new RegisterRequest("existing@eventzone.com", "Password@123", "Existing User");
 
         assertThatThrownBy(() -> authService.register(request))
                 .isInstanceOf(ConflictException.class);
@@ -56,14 +56,14 @@ class AuthServiceTest {
     @Test
     void register_newEmail_createsAttendee() {
         when(userRepository.existsByEmail("new@eventzone.com")).thenReturn(false);
-        when(passwordEncoder.encode("Password123!")).thenReturn("hashed-password");
+        when(passwordEncoder.encode("Password@123")).thenReturn("hashed-password");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
             User u = invocation.getArgument(0);
             u.setId(UUID.randomUUID());
             return u;
         });
 
-        RegisterRequest request = new RegisterRequest("new@eventzone.com", "Password123!", "New User");
+        RegisterRequest request = new RegisterRequest("new@eventzone.com", "Password@123", "New User");
         UserResponse response = authService.register(request);
 
         assertThat(response.email()).isEqualTo("new@eventzone.com");
@@ -75,38 +75,38 @@ class AuthServiceTest {
     void login_success_returnsToken() {
         User user = User.builder()
                 .id(UUID.randomUUID())
-                .email("user1@eventzone.com")
+                .email("attendee1@eventzone.com")
                 .passwordHash("hashed-password")
                 .role("ATTENDEE")
-                .name("Divya")
+                .name("Aarav")
                 .build();
 
-        when(userRepository.findByEmail("user1@eventzone.com")).thenReturn(Optional.of(user));
-        when(passwordEncoder.matches("Password123!", "hashed-password")).thenReturn(true);
-        when(jwtUtil.generateToken("user1@eventzone.com", "ATTENDEE")).thenReturn("signed-jwt-token");
+        when(userRepository.findByEmail("attendee1@eventzone.com")).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches("Password@123", "hashed-password")).thenReturn(true);
+        when(jwtUtil.generateToken("attendee1@eventzone.com", "ATTENDEE")).thenReturn("signed-jwt-token");
 
-        AuthResponse response = authService.login(new LoginRequest("user1@eventzone.com", "Password123!"));
+        AuthResponse response = authService.login(new LoginRequest("attendee1@eventzone.com", "Password@123"));
 
         assertThat(response.token()).isEqualTo("signed-jwt-token");
         assertThat(response.role()).isEqualTo("ATTENDEE");
-        assertThat(response.email()).isEqualTo("user1@eventzone.com");
-        assertThat(response.name()).isEqualTo("Divya");
+        assertThat(response.email()).isEqualTo("attendee1@eventzone.com");
+        assertThat(response.name()).isEqualTo("Aarav");
     }
 
     @Test
     void login_wrongPassword_throwsUnauthorized() {
         User user = User.builder()
                 .id(UUID.randomUUID())
-                .email("user1@eventzone.com")
+                .email("attendee1@eventzone.com")
                 .passwordHash("hashed-password")
                 .role("ATTENDEE")
-                .name("Divya")
+                .name("Aarav")
                 .build();
 
-        when(userRepository.findByEmail("user1@eventzone.com")).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("attendee1@eventzone.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("wrong-password", "hashed-password")).thenReturn(false);
 
-        assertThatThrownBy(() -> authService.login(new LoginRequest("user1@eventzone.com", "wrong-password")))
+        assertThatThrownBy(() -> authService.login(new LoginRequest("attendee1@eventzone.com", "wrong-password")))
                 .isInstanceOf(UnauthorizedException.class);
     }
 

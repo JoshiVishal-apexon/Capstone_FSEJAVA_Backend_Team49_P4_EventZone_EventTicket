@@ -8,11 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eventzone-backend" />
+        <module name="Capstone_FSEJAVA_Backend_Team49_P4_EventZone_EventTicket" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Capstone_FSEJAVA_Backend_Team49_P4_EventZone_EventTicket" options="-parameters" />
       <module name="eventzone-backend" options="-parameters" />
     </option>
   </component>
