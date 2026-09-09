@@ -50,8 +50,8 @@ public class DataSeeder implements ApplicationRunner {
         log.info("EventZone: seeding initial data...");
 
         User admin = saveUser("admin@eventzone.com", "Admin", "ADMIN");
-        User organiser1 = saveUser("organiser1@eventzone.com", "Skyline Events", "ORGANISER");
-        User organiser2 = saveUser("organiser2@eventzone.com", "Nova Productions", "ORGANISER");
+        User organiser1 = saveUser("skyline@eventzone.com", "Skyline Events", "ORGANISER");
+        User organiser2 = saveUser("nova@eventzone.com", "Nova Productions", "ORGANISER");
         User attendee = saveUser("attendee1@eventzone.com", "Aarav", "ATTENDEE");
 
         Map<String, EventCategory> categories = new HashMap<>();
