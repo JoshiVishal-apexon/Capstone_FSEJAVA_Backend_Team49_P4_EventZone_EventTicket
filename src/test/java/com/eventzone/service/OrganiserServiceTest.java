@@ -100,4 +100,13 @@ class OrganiserServiceTest {
         assertThat(ticket.totalBooked()).isEqualTo(15L);
         assertThat(ticket.availableSeats()).isEqualTo(30);
     }
+
+    @Test
+    void myEvents_whenNoEvents_returnsEmptyList() {
+        when(eventRepository.findByOrganiser_Id(organiser.getId())).thenReturn(List.of());
+
+        List<OrganiserEventResponse> result = organiserService.myEvents(organiser);
+
+        assertThat(result).isEmpty();
+    }
 }

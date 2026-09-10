@@ -2,9 +2,11 @@ package com.eventzone.service;
 
 import com.eventzone.dto.event.EventCreateRequest;
 import com.eventzone.dto.event.EventDetailResponse;
+import com.eventzone.dto.event.EventSummaryResponse;
 import com.eventzone.dto.event.EventUpdateRequest;
 import com.eventzone.entity.Event;
 import com.eventzone.entity.EventCategory;
+import com.eventzone.entity.TicketCategory;
 import com.eventzone.entity.User;
 import com.eventzone.exception.ConflictException;
 import com.eventzone.exception.ForbiddenException;
@@ -18,7 +20,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -150,6 +154,116 @@ class EventServiceTest {
         assertThatThrownBy(() -> eventService.delete(event.getId(), organiser))
                 .isInstanceOf(ConflictException.class)
                 .hasMessageContaining("Cannot delete event 'Original title' because tickets have already been booked for it");
+    }
+
+    @Test
+    void listActive_filtersByCategory() {
+        Event event = existingEvent();
+        when(eventRepository.findByActiveTrueAndCategory_NameIgnoreCase("Concert")).thenReturn(java.util.List.of(event));
+
+        java.util.List<com.eventzone.dto.event.EventSummaryResponse> result = eventService.listActive("Concert");
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).title()).isEqualTo("Original title");
+    }
+
+    @Test
+    void getDetail_returnsMappedEvent() {
+        Event event = existingEvent();
+        event.setTicketCategories(new java.util.ArrayList<>());
+        when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+
+        EventDetailResponse response = eventService.getDetail(event.getId());
+
+        assertThat(response.id()).isEqualTo(event.getId());
+        assertThat(response.title()).isEqualTo("Original title");
+    }
+
+    @Test
+    void listActive_whenCategoryBlank_usesActiveQuery() {
+        Event event = existingEvent();
+        when(eventRepository.findByActiveTrue()).thenReturn(java.util.List.of(event));
+
+        java.util.List<com.eventzone.dto.event.EventSummaryResponse> result = eventService.listActive("   ");
+
+        assertThat(result).hasSize(1);
+    }
+
+    @Test
+    void delete_whenCancelledBookingMarksEventInactive() {
+        Event event = existingEvent();
+        com.eventzone.entity.Booking booking = com.eventzone.entity.Booking.builder()
+                .id(UUID.randomUUID())
+                .ticketCategory(com.eventzone.entity.TicketCategory.builder().id(UUID.randomUUID()).event(event).name("G").price(java.math.BigDecimal.ONE).totalSeats(1).availableSeats(1).build())
+                .quantity(1)
+                .status("CANCELLED")
+                .bookingRef("BK-CANCELLED")
+                .build();
+        when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+        when(bookingRepository.findFirstByTicketCategory_Event_Id(event.getId())).thenReturn(booking);
+        when(bookingRepository.saveAndFlush(booking)).thenReturn(booking);
+        when(eventRepository.saveAndFlush(event)).thenReturn(event);
+
+        eventService.delete(event.getId(), organiser);
+
+        assertThat(event.isActive()).isFalse();
+    }
+
+    @Test
+    void listActive_whenCategoryIsNull_usesUnfilteredQuery() {
+        Event event = existingEvent();
+        when(eventRepository.findByActiveTrue()).thenReturn(List.of(event));
+
+        List<EventSummaryResponse> result = eventService.listActive(null);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).title()).isEqualTo("Original title");
+    }
+
+    @Test
+    void listAllEvents_handlesNullAndFilteredCategoryRequests() {
+        Event event = existingEvent();
+        when(eventRepository.findAll()).thenReturn(List.of(event));
+        when(eventRepository.findByActiveTrueAndCategory_NameIgnoreCase("Concert")).thenReturn(List.of(event));
+
+        assertThat(eventService.listAllEvents(null)).hasSize(1);
+        assertThat(eventService.listAllEvents("Concert")).hasSize(1);
+    }
+
+    @Test
+    void toSummary_usesLowestAndHighestTicketPrices() {
+        Event event = existingEvent();
+        event.setTicketCategories(List.of(
+                TicketCategory.builder().name("General").price(new BigDecimal("299.00")).build(),
+                TicketCategory.builder().name("VIP").price(new BigDecimal("1499.00")).build(),
+                TicketCategory.builder().name("Backstage").price(new BigDecimal("799.00")).build()
+        ));
+
+        when(eventRepository.findByActiveTrue()).thenReturn(List.of(event));
+
+        List<EventSummaryResponse> result = eventService.listActive(null);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).minPrice()).isEqualByComparingTo(new BigDecimal("299.00"));
+        assertThat(result.get(0).maxPrice()).isEqualByComparingTo(new BigDecimal("1499.00"));
+    }
+
+    @Test
+    void delete_whenBookingStatusIsPending_doesNotThrow() {
+        Event event = existingEvent();
+        com.eventzone.entity.Booking booking = com.eventzone.entity.Booking.builder()
+                .id(UUID.randomUUID())
+                .ticketCategory(TicketCategory.builder().id(UUID.randomUUID()).event(event).name("G").price(BigDecimal.ONE).totalSeats(1).availableSeats(1).build())
+                .quantity(1)
+                .status("PENDING")
+                .bookingRef("BK-PENDING")
+                .build();
+        when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+        when(bookingRepository.findFirstByTicketCategory_Event_Id(event.getId())).thenReturn(booking);
+
+        eventService.delete(event.getId(), organiser);
+
+        assertThat(event.isActive()).isTrue();
     }
 
     private com.eventzone.entity.Booking bookingSample() {

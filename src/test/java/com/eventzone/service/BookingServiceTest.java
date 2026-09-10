@@ -231,4 +231,25 @@ class BookingServiceTest {
         assertThatThrownBy(() -> bookingService.cancel(booking.getId(), otherUser))
                 .isInstanceOf(ForbiddenException.class);
     }
+
+    @Test
+    void cancelAllForEvent_whenUnauthorized_throwsForbidden() {
+        User otherUser = User.builder().id(UUID.randomUUID()).email("other@eventzone.com").role("ATTENDEE").name("Other").passwordHash("h").build();
+        when(eventRepository.findById(ticketCategory.getEvent().getId())).thenReturn(Optional.of(ticketCategory.getEvent()));
+
+        assertThatThrownBy(() -> bookingService.cancelAllForEvent(ticketCategory.getEvent().getId(), otherUser))
+                .isInstanceOf(ForbiddenException.class);
+    }
+
+    @Test
+    void cancelAllForEvent_whenNoBookings_returnsEmptyList() {
+        User organiser = ticketCategory.getEvent().getOrganiser();
+        when(eventRepository.findById(ticketCategory.getEvent().getId())).thenReturn(Optional.of(ticketCategory.getEvent()));
+        when(bookingRepository.findByTicketCategory_Event_IdAndStatusNot(ticketCategory.getEvent().getId(), BookingService.STATUS_CANCELLED))
+                .thenReturn(java.util.List.of());
+
+        java.util.List<BookingResponse> result = bookingService.cancelAllForEvent(ticketCategory.getEvent().getId(), organiser);
+
+        assertThat(result).isEmpty();
+    }
 }

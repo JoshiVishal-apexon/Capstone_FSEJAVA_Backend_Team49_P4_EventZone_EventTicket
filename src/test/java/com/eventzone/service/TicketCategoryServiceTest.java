@@ -151,4 +151,24 @@ class TicketCategoryServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Ticket category not found");
     }
+
+    @Test
+    void update_whenSeatsWouldGoNegative_clampsAvailableSeatsToZero() {
+        UUID ticketCategoryId = UUID.randomUUID();
+        TicketCategory ticketCategory = TicketCategory.builder()
+                .id(ticketCategoryId)
+                .event(event)
+                .name("General")
+                .price(new BigDecimal("120.00"))
+                .totalSeats(10)
+                .availableSeats(1)
+                .build();
+        when(ticketCategoryRepository.findById(ticketCategoryId)).thenReturn(Optional.of(ticketCategory));
+        when(ticketCategoryRepository.save(any(TicketCategory.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TicketCategoryResponse result = ticketCategoryService.update(ticketCategoryId, new TicketCategoryRequest("General", new BigDecimal("120.00"), 0), organiser);
+
+        assertThat(result.availableSeats()).isZero();
+        assertThat(ticketCategory.getAvailableSeats()).isZero();
+    }
 }

@@ -117,4 +117,19 @@ class AuthServiceTest {
         assertThatThrownBy(() -> authService.login(new LoginRequest("nobody@eventzone.com", "whatever")))
                 .isInstanceOf(UnauthorizedException.class);
     }
+
+    @Test
+    void register_trimsAndLowercasesEmail() {
+        when(userRepository.existsByEmail("mixed.case@eventzone.com")).thenReturn(false);
+        when(passwordEncoder.encode("Password@123")).thenReturn("hashed-password");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+            User u = invocation.getArgument(0);
+            u.setId(UUID.randomUUID());
+            return u;
+        });
+
+        UserResponse response = authService.register(new RegisterRequest("  MIXED.Case@EventZone.com  ", "Password@123", "Mixed User"));
+
+        assertThat(response.email()).isEqualTo("mixed.case@eventzone.com");
+    }
 }

@@ -44,9 +44,9 @@ accounts — all with the password `Password@123`:
 | Role      | Email                  |
 |-----------|------------------------|
 | ADMIN     | admin@eventzone.com    |
-| ORGANISER | organiser1@eventzone.com |
-| ORGANISER | organiser2@eventzone.com |
-| ATTENDEE  | attendee1@eventzone.com  |
+| ORGANISER | skyline@eventzone.com  |
+| ORGANISER | nova@eventzone.com     |
+| ATTENDEE  | attendee1@eventzone.com |
 
 To reseed from scratch, delete the `data/` directory and restart.
 
@@ -56,7 +56,7 @@ To reseed from scratch, delete the `data/` directory and restart.
 .\scripts\test.ps1       # or: mvn test
 ```
 
-Unit tests (JUnit 5 + Mockito) cover `AuthService`, `CategoryService` and `EventService`.
+Unit tests (JUnit 5 + Mockito) cover `AuthService`, `BookingService`, `CategoryService`, `EventService`, `OrganiserService`, `TicketCategoryService`, plus controller and monitoring smoke checks such as `ControllerCoverageTest` and `MonitoringControllerTest`.
 
 ## Error responses
 

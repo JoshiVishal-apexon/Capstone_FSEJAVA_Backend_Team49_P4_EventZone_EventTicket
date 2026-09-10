@@ -140,4 +140,13 @@ class CategoryServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessage("Category not found");
     }
+
+    @Test
+    void listAll_whenEmpty_returnsEmptyList() {
+        when(categoryRepository.findAll()).thenReturn(List.of());
+
+        List<CategoryResponse> result = categoryService.listAll();
+
+        assertThat(result).isEmpty();
+    }
 }

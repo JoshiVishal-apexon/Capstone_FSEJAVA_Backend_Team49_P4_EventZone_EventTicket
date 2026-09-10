@@ -131,7 +131,6 @@
                     <excludes>
                         <exclude>com/eventzone/config/**</exclude>
                         <exclude>com/eventzone/security/**</exclude>
-                        <exclude>com/eventzone/controller/**</exclude>
                         <exclude>com/eventzone/dto/**</exclude>
                         <exclude>com/eventzone/config/DataSeeder*</exclude>
                         <exclude>com/eventzone/exception/GlobalExceptionHandler*</exclude>

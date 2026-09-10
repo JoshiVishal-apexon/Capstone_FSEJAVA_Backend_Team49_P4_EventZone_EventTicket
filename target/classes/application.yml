@@ -2,7 +2,7 @@ spring:
   application:
     name: eventzone-backend
   profiles:
-    active: h2
+    active: dev
 
 server:
   port: 8080
